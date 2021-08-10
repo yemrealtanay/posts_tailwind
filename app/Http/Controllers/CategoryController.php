@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
+
 class CategoryController extends Controller
 {
     /**
@@ -14,7 +15,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::all();
+        //return View::first(['layouts.header', 'welcome'], $categories);
+        return view('category.index', compact('categories'));
     }
 
     /**
@@ -22,9 +25,12 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    
+     
     public function create()
     {
-        //
+        return view('category.create');
     }
 
     /**
@@ -35,7 +41,22 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        function rand_color() {
+            return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+        }
+
+        $request->validate([
+            'name' => 'required|min:3',
+        ]);
+
+        $category = new Category;
+        $category->name = $request->name;
+        $category->color = rand_color();
+        $category->save();
+
+        return redirect()->route('categories.show', $category);
+
     }
 
     /**
@@ -46,7 +67,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return view('category.show', compact('category'));
     }
 
     /**
@@ -57,7 +78,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('category.edit', compact('category'));
     }
 
     /**
@@ -69,7 +90,14 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $request->validate([
+            'name' => 'required|min:3',
+        ]);
+
+        $category->name = $request->name;
+        $category->save();
+
+        return redirect()->route('categories.show', $category);
     }
 
     /**
@@ -80,6 +108,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return redirect()->route('categories.index');
     }
 }
