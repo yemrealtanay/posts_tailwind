@@ -75,6 +75,8 @@
                     <ul class="flex items-center justify-between font-bold text-sm text-white uppercase no-underline">
                     <li><a class="hover:text-gray-200 hover:underline px-4" href="{{ route('categories.index') }}">Tüm Kategoriler</a></li>
                     <li><a class="hover:text-gray-200 hover:underline px-4" href="{{ route('categories.create') }}">Kategori Ekle</a></li>
+                    
+                    <li><a class="hover:text-gray-200 hover:underline px-4" href="{{ route('posts.create') }}">Post Ekle</a></li>
                     </ul>
             </nav>
 

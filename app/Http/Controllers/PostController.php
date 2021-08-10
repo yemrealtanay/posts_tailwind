@@ -16,8 +16,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $post = Post::all();
-        return view('welcome', compact('post'));
+        $posts = Post::all();
+        return view('post.index', compact('posts'));
     }
 
     /**
@@ -27,7 +27,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        return view('post.create', compact('categories'));
     }
 
     /**
@@ -38,7 +39,22 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'title' => 'required',
+            'content' => 'required',
+            'image_path' => 'required'
+        ]);
+
+        $post = new Post;
+        $post->user_id = $request->user()->id;
+        $post->category_id = $request->category_id;
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->image_path = $request->image_path;
+        $post->save();
+        
+        return redirect()->route('post.show', $post);
     }
 
     /**
@@ -49,7 +65,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view('post.show', compact('post'));
     }
 
     /**
@@ -60,7 +76,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        $categories = Category::all();
+        return view('post.edit', compact('post', 'categories'));
     }
 
     /**
@@ -72,7 +89,19 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'title' => 'required',
+            'content' => 'required'
+        ]);
+
+        $post->user_id = $request->user()->id;
+        $post->category_id = $request->category_id;
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->save();
+        
+        return redirect()->route('posts.show', $post);
     }
 
     /**
@@ -83,6 +112,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        
+        return redirect()->route('posts.index');
     }
 }
