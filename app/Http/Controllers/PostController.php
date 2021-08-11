@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -43,18 +44,30 @@ class PostController extends Controller
             'category_id' => 'required|exists:categories,id',
             'title' => 'required',
             'content' => 'required',
-            'image_path' => 'required'
         ]);
+        
+        $img = $request->file('product_image');
+
+        $newImageName = uniqid() . '.' . $request->title . '.' . $request->file('product_image')->getClientOriginalExtension();
+
+        $destinationPath = public_path('images');
+
+        $img->move($destinationPath, $newImageName);
+
+        $slug = Str::slug($request->title, '-');
 
         $post = new Post;
         $post->user_id = $request->user()->id;
         $post->category_id = $request->category_id;
+        $post->slug = $slug;
+        $post->image_path = $newImageName;
+        
+        
         $post->title = $request->title;
         $post->content = $request->content;
-        $post->image_path = $request->image_path;
         $post->save();
         
-        return redirect()->route('post.show', $post);
+        return redirect()->route('posts.show', $post);
     }
 
     /**

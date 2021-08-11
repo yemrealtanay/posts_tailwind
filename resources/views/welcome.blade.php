@@ -1,11 +1,6 @@
 @extends('layouts.master')
 @section('content')
 
-
- 
-
-
-
 <div class="container mx-auto flex flex-wrap py-6">
 
     <!-- Posts Section -->
