@@ -20,7 +20,7 @@ use App\Models\Category;
 
 Route::get('/', function () {
     $posts = Post::all();
-    return view('welcome');
+    return view('welcome', compact('posts'));
 });
 
 
@@ -33,7 +33,8 @@ Route::resource( 'users', UserController::class);
 
 
 Route::get('/dashboard', function () {
-    return view('welcome');
+    $posts = Post::all();
+    return view('welcome', compact('posts'));
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
